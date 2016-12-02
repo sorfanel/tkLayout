@@ -5,7 +5,7 @@ Component {
   service true
   scaleOnSensor 0
   Element {
-    elementName Ti 
+    elementName Ti
     quantity 3.31
     unit g/m
   }

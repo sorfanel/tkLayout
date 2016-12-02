@@ -1,0 +1,22 @@
+// HV: 1 wires (live and return: conservative assumption because of serial power)
+// PP0-SEH-HV (700067231 Rev 01)
+Component {
+  componentName "Sensor HV line"
+  service true
+  scaleOnSensor 0
+  Element {
+    elementName Al_HV_L4
+    quantity 0.2295
+    unit g/m
+  }
+  Element {
+    elementName Cu_HV_L4
+    quantity 0.0817
+    unit g/m
+  }
+  Element {
+    elementName PE_HV_L4
+    quantity 0.825
+    unit g/m
+  }
+}

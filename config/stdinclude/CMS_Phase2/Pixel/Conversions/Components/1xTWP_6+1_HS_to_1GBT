@@ -5,7 +5,7 @@ Conversion {
   Input {
     // Two conductors
     Element {
-      elementName Cu_TWP_6+1_HS 
+      elementName Cu_TWP_6+1_HS_L1
       quantity 1.547
       unit g/m
     }

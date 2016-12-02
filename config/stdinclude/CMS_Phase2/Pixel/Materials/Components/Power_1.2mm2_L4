@@ -1,0 +1,27 @@
+// 2*0.6 mm^2 power wires
+// Serial power: the power lines do not accumulate
+//0.5 SP chain per rod
+Component {
+  componentName "Power wires"
+  service true
+  scaleOnSensor 0
+  // ONE wire
+  Element {
+    elementName Cu_SP_L4
+    quantity 0.33
+    unit g/m
+  }
+  // ONE wire
+  Element {
+    elementName PE_SP_L4
+    quantity 1.98
+    unit g/m
+  }
+  // ONE wire
+  Element {
+    elementName Al_SP_L4
+    quantity 6.01
+    unit g/m
+  }
+}
+

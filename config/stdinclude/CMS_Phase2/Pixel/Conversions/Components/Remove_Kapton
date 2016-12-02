@@ -4,7 +4,7 @@ Conversion {
   Input {
     // Two insulations
     Element {
-      elementName Kapton
+      elementName Kapton_L1
       quantity 0.057
       unit g/m
     }
@@ -13,3 +13,158 @@ Conversion {
   }
 }
 
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_L2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_L3
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_L4
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R1_D1
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R2_D1
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R3_D1
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R4_D1
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R1_D2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R2_D2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R3_D2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R4_D2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}
+
+Conversion {
+  Input {
+    // Two insulations
+    Element {
+      elementName Kapton_R5_D2
+      quantity 0.057
+      unit g/m
+    }
+  }
+  Output {
+  }
+}

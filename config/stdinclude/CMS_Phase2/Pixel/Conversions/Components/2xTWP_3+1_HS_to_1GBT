@@ -5,7 +5,21 @@ Conversion {
   Input {
     // Two conductors
     Element {
-      elementName Cu_TWP_3+1_HS 
+      elementName Cu_TWP_3+1_HS_R1_D1
+      quantity 1.768
+      unit g/m
+    }
+  }
+  Output {
+    @include GBT_and_fibres
+  }
+}
+
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_3+1_HS_R1_D2
       quantity 1.768
       unit g/m
     }

@@ -11,13 +11,13 @@ Materials FPIX_disk {
     service false
     scaleOnSensor 0
     Element {
-      elementName Ti
-      quantity 11.45
+      elementName Ti_D1
+      quantity 11.39
       unit g
     }
     Element {
-      elementName CO2
-      quantity 10.8
+      elementName CO2_D1
+      quantity 10.81
       unit g
     }
   }
@@ -28,13 +28,13 @@ Materials FPIX_disk {
     service true
     scaleOnSensor 0
     Element {
-      elementName FPIX_Ti
-      quantity 0.0266
+      elementName FPIX_Ti_D1
+      quantity 0.03972
       unit g/m
     }
     Element {
-      elementName FPIX_CO2
-      quantity 0.026
+      elementName FPIX_CO2_D1
+      quantity 0.03768
       unit g/m
     }
   }
@@ -46,18 +46,18 @@ Materials FPIX_disk {
     service false
     scaleOnSensor 0
     Element {
-      elementName Al
-      quantity 4.7
+      elementName Al_SP_D1
+      quantity 18.10
       unit g
     }
     Element {
-      elementName Cu
-      quantity 0.99
+      elementName Cu_SP_D1
+      quantity 1.1
       unit g
     }
     Element {
-      elementName PE
-      quantity 1
+      elementName PE_SP_D1
+      quantity 5.77
       unit g
     }
   }
@@ -68,18 +68,18 @@ Materials FPIX_disk {
     service true
     scaleOnSensor 0
     Element {
-      elementName FPIX_Al
-      quantity 0.032
+      elementName FPIX_Al_SP_D1
+      quantity 0.1313
       unit g/m
     }
     Element {
-      elementName FPIX_Cu
-      quantity 0.0067160494
+      elementName FPIX_Cu_SP_D1
+      quantity 0.0078
       unit g/m
     }
     Element {
-      elementName FPIX_PE
-      quantity 0.006
+      elementName FPIX_PE_SP_D1
+      quantity 0.0415
       unit g/m
     }
   }
@@ -91,18 +91,18 @@ Materials FPIX_disk {
     service false
     scaleOnSensor 0
     Element {
-      elementName Al_HV
-      quantity 0.393125
+      elementName Al_HV_D1
+      quantity 0.93
       unit g
     }
     Element {
-      elementName Cu
-      quantity 0.140
+      elementName Cu_HV_D1
+      quantity 0.33
       unit g
     }
     Element {
-      elementName PE
-      quantity 1.41
+      elementName PE_HV_D1
+      quantity 3.35
       unit g
     }
   }
@@ -113,18 +113,18 @@ Materials FPIX_disk {
     service true
     scaleOnSensor 0
     Element {
-      elementName FPIX_Al_HV
-      quantity 0.005508
+      elementName FPIX_Al_HV_D1
+      quantity 0.0064
       unit g/m
     }
     Element {
-      elementName FPIX_Cu
-      quantity 0.0019608
+      elementName FPIX_Cu_HV_D1
+      quantity 0.0023
       unit g/m
     }
     Element {
-      elementName FPIX_PE
-      quantity 0.0198
+      elementName FPIX_PE_HV_D1
+      quantity 0.0231
       unit g/m
     }
   }

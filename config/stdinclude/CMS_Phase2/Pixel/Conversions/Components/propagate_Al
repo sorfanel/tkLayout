@@ -3,14 +3,207 @@
 Conversion {
   Input {
     Element {
-      elementName Al 
+      elementName Al_SP_L1
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Al
+      elementName Al_SP_L1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_SP_L2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_SP_L2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_SP_L3
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_SP_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_SP_L4
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_SP_L4
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_L1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_L1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_L2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_L2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_L3
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_L4
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_L4
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_HV_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_HV_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_SP_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_SP_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Al_SP_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Al_SP_D2
       quantity 1
       unit g/m
       service true

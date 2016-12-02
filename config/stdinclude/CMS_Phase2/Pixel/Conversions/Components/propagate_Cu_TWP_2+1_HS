@@ -3,14 +3,14 @@
 Conversion {
   Input {
     Element {
-      elementName Cu_TWP_2+1_HS
+      elementName Cu_TWP_2+1_HS_L2
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Cu_TWP_2+1_HS
+      elementName Cu_TWP_2+1_HS_L2
       quantity 1
       unit g/m
       service true

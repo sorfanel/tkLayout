@@ -1,5 +1,5 @@
 Element {
-      elementName Cu
+      elementName Cu_GBT
       quantity 0.474
       unit g
       service false
@@ -13,7 +13,7 @@ Element {
 
 // 1/6 DC converters
 Element {
-      elementName Cu
+      elementName Cu_DCDC
       quantity 0.403
       unit g
       service false
@@ -27,7 +27,7 @@ Element {
 
 // 2 Optical fibers
  Element {
-      elementName PE
+      elementName PE_fiber
       quantity 1.139
       unit g/m
       service true
@@ -48,21 +48,21 @@ Element {
     // 1/6 DC alim
     // Two wires/6
     Element {
-      elementName Cu
+      elementName Cu_DCalim
       quantity 0.093
       unit g/m
       service true
     }
     // Two wires/6
     Element {
-      elementName PE
+      elementName PE_DCalim
       quantity 0.074
       unit g/m
       service true
     }
     // Two wires/6 0.4 mm^2
     Element {
-      elementName Al
+      elementName Al_DCalim
       quantity 0.36
       unit g/m
       service true

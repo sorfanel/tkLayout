@@ -1,16 +1,142 @@
 // 1:1 conversion of Cu_TWP_1+1_HS
 
+
 Conversion {
   Input {
     Element {
-      elementName Cu_TWP_1+1_HS
+      elementName Cu_TWP_1+1_HS_L3
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Cu_TWP_1+1_HS
+      elementName Cu_TWP_1+1_HS_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R2_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R2_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R3_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R3_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R4_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R4_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R2_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R2_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R3_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R3_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R4_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R4_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_TWP_1+1_HS_R5_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+      elementName Cu_TWP_1+1_HS_R5_D2
       quantity 1
       unit g/m
       service true
