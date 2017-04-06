@@ -5,12 +5,122 @@ Conversion {
   Input {
     // Two conductors
     Element {
-      elementName Cu_TWP_2+1_HS
-      quantity 1.989
+      elementName Cu_TWP_2+1_HS_L2
+      quantity 1.326
       unit g/m
     }
   }
   Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R1_D1
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R1_D2
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R2_D1
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R2_D2
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R3_D1
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_R3_D2
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
+    @include GBT_and_fibres
+  }
+}
+
+
+Conversion {
+  Input {
+    // Two conductors
+    Element {
+      elementName Cu_TWP_2+1_HS_L2
+      quantity 1.326
+      unit g/m
+    }
+  }
+  Output {
+
+
     @include GBT_and_fibres
   }
 }

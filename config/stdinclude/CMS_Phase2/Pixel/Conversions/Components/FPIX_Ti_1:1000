@@ -1,14 +1,33 @@
 Conversion {
   Input {
     Element {
-      elementName FPIX_Ti
+      elementName FPIX_Ti_D1
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Ti 
+    
+      elementName Ti_D1 
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_Ti_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Ti_D2 
       quantity 1000
       unit g/m
       service true

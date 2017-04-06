@@ -81,6 +81,7 @@ class RootWTable : public RootWItem {
 public:
   ~RootWTable() {};
   RootWTable();
+  string getContent(int row, int column);
   void setContent(int row, int column, string content);
   void setContent(int row, int column, int number);
   void setContent(int row, int column, double number, int precision);

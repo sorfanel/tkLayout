@@ -3,17 +3,224 @@
 Conversion {
   Input {
     Element {
-      elementName Cu 
+      elementName Cu_HV_D1 
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Cu
+    
+      elementName Cu_HV_D1
       quantity 1
       unit g/m
       service true
     }
   }
 }
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_HV_D2 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_HV_L1 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_L1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_HV_L2 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_L2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_HV_L3 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_HV_L4 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_L4
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+// 1:1 conversion of Al
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_D1 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_D2 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_D2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_L1 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_L1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_L2 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_L2
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_L3 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Cu_SP_L4 
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_L4
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+
+

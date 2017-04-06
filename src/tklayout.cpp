@@ -29,6 +29,7 @@ int main(int argc, char* argv[]) {
     ("bandwidth-cpu,B", "Report multi-cpu bandwidth analysis.\n\t(implies 'b')")
     ("material,m", "Report materials and weights analyses.")
     ("resolution,r", "Report resolution analysis.")
+    ("debug-stella,s", "Report stella analysis.")
     ("debug-resolution,R", "Report extended resolution analysis : debug plots for modules parametrized spatial resolution.")
     ("trigger,t", "Report base trigger analysis.")
     ("trigger-ext,T", "Report extended trigger analysis.\n\t(implies 't')")
@@ -145,6 +146,7 @@ int main(int argc, char* argv[]) {
         if ( vm.count("all") || vm.count("material") || vm.count("resolution") || vm.count("debug-resolution")) {
           if (!squid.pureAnalyzeMaterialBudget(mattracks, (vm.count("all") || vm.count("resolution") ||  vm.count("debug-resolution")), vm.count("debug-resolution"))) return EXIT_FAILURE;
           if ((vm.count("all") || vm.count("material"))  && !squid.reportMaterialBudgetSite(vm.count("debug-services"))) return EXIT_FAILURE;
+          if ((vm.count("all") || vm.count("debug-stella"))  && !squid.reportStellaSite(vm.count("debug-stella"))) return EXIT_FAILURE;
           if ((vm.count("all") || vm.count("resolution") || vm.count("debug-resolution"))  && !squid.reportResolutionSite()) return EXIT_FAILURE;	  
         }
         if (vm.count("graph") && !squid.reportNeighbourGraphSite()) return EXIT_FAILURE;

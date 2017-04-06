@@ -3,31 +3,14 @@
 Conversion {
   Input {
     Element {
-      elementName Ti 
-      quantity 1
-      unit g/m
-    }
-  }
-  Output {
-    Element {
-      elementName Ti
-      quantity 1
-      unit g/m
-      service true
-    }
-  }
-}
-
-Conversion {
-  Input {
-    Element {
       elementName Ti_L1 
       quantity 1
       unit g/m
     }
   }
-  Output {
+    Output {
     Element {
+ 
       elementName Ti_L1
       quantity 1
       unit g/m
@@ -35,7 +18,6 @@ Conversion {
     }
   }
 }
-
 Conversion {
   Input {
     Element {
@@ -44,8 +26,9 @@ Conversion {
       unit g/m
     }
   }
-  Output {
+    Output {
     Element {
+ 
       elementName Ti_L2
       quantity 1
       unit g/m
@@ -53,7 +36,6 @@ Conversion {
     }
   }
 }
-
 Conversion {
   Input {
     Element {
@@ -62,9 +44,28 @@ Conversion {
       unit g/m
     }
   }
-  Output {
+    Output {
     Element {
+ 
       elementName Ti_L3
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Ti_L4 
+      quantity 1
+      unit g/m
+    }
+  }
+    Output {
+    Element {
+ 
+      elementName Ti_L4
       quantity 1
       unit g/m
       service true
@@ -75,14 +76,33 @@ Conversion {
 Conversion {
   Input {
     Element {
-      elementName Ti_L4 
+      elementName Ti_D1 
       quantity 1
       unit g/m
     }
   }
-  Output {
+    Output {
     Element {
-      elementName Ti_L4
+ 
+      elementName Ti_D1
+      quantity 1
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName Ti_D2 
+      quantity 1
+      unit g/m
+    }
+  }
+    Output {
+    Element {
+ 
+      elementName Ti_D2
       quantity 1
       unit g/m
       service true

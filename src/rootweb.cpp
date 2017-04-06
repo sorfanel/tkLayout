@@ -129,6 +129,13 @@ void RootWTable::setColor(int row, int column, int newColor) {
   tableContentColor_[make_pair(row, column)] = newColor;
 }
 
+
+string RootWTable::getContent(int row, int column) {
+  // std::cerr << "setContent("<<row<<", "<<column<<", "<<content<<")"<<endl; // debug
+ return tableContent_[make_pair(row, column)];
+}
+
+
 void RootWTable::setContent(int row, int column, string content) {
   // std::cerr << "setContent("<<row<<", "<<column<<", "<<content<<")"<<endl; // debug
   tableContent_[make_pair(row, column)] = content;

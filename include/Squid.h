@@ -102,6 +102,7 @@ namespace insur {
     bool reportResolutionSite();
     bool reportTriggerPerformanceSite(bool extended);
     bool reportNeighbourGraphSite();
+    bool reportStellaSite(bool debugStella);
     bool additionalInfoSite();
     bool makeSite(bool addLogPage = true);
     void setBasename(std::string newBaseName);

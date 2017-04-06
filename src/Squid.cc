@@ -649,6 +649,19 @@ namespace insur {
     }
   }
 
+bool Squid::reportStellaSite(bool debugStella) {
+    if (mb) {
+      startTaskClock("Creating geometry report");
+      if (px)v.StellaSummary(pixelAnalyzer, *px, *pm, pi,debugStella,site,"pixelaki"); 
+      // if (px)v.weigthSummart(pixelAnalyzer, weightDistributionPixel, site, "pixel"); 
+      stopTaskClock();
+      return true;
+    } else {
+      logERROR(err_no_tracker);
+      return false;
+    }
+  }
+
   /**
    * Produces the output of the resolution measurement
    * @return True if there were no errors during processing, false otherwise

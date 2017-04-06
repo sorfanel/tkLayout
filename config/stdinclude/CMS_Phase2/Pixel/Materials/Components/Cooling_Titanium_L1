@@ -1,9 +1,10 @@
-// Cooling for the pixel modules along the rod: 1 cooling pipe/rod
+// Cooling for the pixel module on the rod
 
 Component {
-  componentName "Cooling"
+  componentName Cooling
   service true
   scaleOnSensor 0
+ 
   Element {
     elementName Ti_L1 
     quantity 3.31

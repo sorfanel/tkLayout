@@ -1,18 +1,74 @@
 Conversion {
   Input {
     Element {
-      elementName FPIX_PE
+      elementName FPIX_PE_SP_D1
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName PE
+    
+      elementName PE_SP_D1
       quantity 1000
       unit g/m
       service true
     }
   }
 }
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_PE_SP_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName PE_SP_D2
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_PE_HV_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName PE_HV_D1
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_PE_HV_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName PE_HV_D2
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+
 

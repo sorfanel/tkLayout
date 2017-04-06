@@ -6411,6 +6411,927 @@ namespace insur {
   }
 
 
+
+void Vizard::StellaSummary(Analyzer& a, Tracker& tracker, MaterialBudget& materialBudget, InactiveSurfaces* inactive, SimParms& simparms,  bool&
+                           debugServices, RootWSite& site, std::string name) {
+    
+    Tracker& myTracker = materialBudget.getTracker();
+    std::string myTrackerName = myTracker.myid();
+    
+    std::string pageTitle = "Electronics";
+    RootWPage& myPage = site.addPage(pageTitle);
+    std::string pageAddress = "Electronics.html";
+    myPage.setAddress(pageAddress);
+    RootWContent* myContent;
+    myContent = new RootWContent("electronics' details");
+    myPage.addContent(myContent);
+    
+    
+    double totalbarreltwp=0.0;
+    double totalringstwp=0.0;
+    double minbarreltwp=10000.0;
+    double minringstwp=10000.0;
+    double maxbarreltwp=0.0;
+    double maxringstwp=0.0;
+    double totalbarrelhv=0.0;
+    double totaldiskshv=0.0;
+    double minbarrelhv=10000.0;
+    double mindiskshv=10000.0;
+    double maxbarrelhv=0.0;
+    double maxdiskshv=0.0;
+    double totalbarrelsp=0.0;
+    double totaldiskssp=0.0;
+    double minbarrelsp=10000.0;
+    double mindiskssp=10000.0;
+    double maxbarrelsp=0.0;
+    double maxdiskssp=0.0;
+    
+    
+    
+    double barreltwp[10];//stella hardcoded "10" for the moment to be fixed
+    double massbarreltwp[10];
+    double massbarrelhv[10];
+    double massbarrelsp[10];
+    double massbarrelcooling[10];
+    double ringstwp[2][10];
+    double barrelhv[10];
+    double diskshv[10];
+    double barrelsp[10];
+    double diskssp[10];
+    double massringstwp[2][10];
+    double massringshv[2];
+    double massringssp[2];
+    double massringscooling[2];
+    
+    std::string barreltwptype[10];
+    std::string ringstwptype[2][10];
+    double barrelmodpergbt[10];
+    double ringsmodpergbt[2][10];
+    double barrelsptotalX[10];
+    double fpixsptotalX[2];
+    
+    int pos;
+    for (int j=0;j<10;j++){ barreltwp[j]=0;barreltwptype[j]="default";barrelmodpergbt[j]=0; ringstwp[0][j]=0;ringstwp[1][j]=0;ringstwptype[0][j]="default";ringstwptype[1][j]="default";ringsmodpergbt[0][j]=0;ringsmodpergbt[1][j]=0;barrelhv[j]=0;diskshv[j]=0;barrelsp[j]=0;diskssp[j]=0;
+        massbarreltwp[j]=0.0;massbarrelhv[j]=0.0;massbarrelsp[j]=0.0;massbarrelcooling[j]=0.0;massringstwp[0][j]=0.0;massringshv[0]=0.0;massringssp[0]=0.0;massringscooling[0]=0.0;massringstwp[1][j]=0.0;massringshv[1]=0.0;massringssp[1]=0.0;massringscooling[1]=0.0;}
+    
+    int elementId=0;
+    std::string elementname;
+    std::string simpleelementname;
+    std::string mothermodule="lala";
+    std::string ringmodule="lala";
+    std::string twptype="";
+    std::string typeofservice;
+    
+    //beginning of csv
+    auto& barrelServices = materialBudget.getInactiveSurfaces().getBarrelServices();
+    auto& endcapServices = materialBudget.getInactiveSurfaces().getEndcapServices();
+    auto& supports = materialBudget.getInactiveSurfaces().getSupports();
+    
+    // We put all services inside the same container
+    std::vector<InactiveElement> allServices;
+    allServices.reserve( barrelServices.size() + endcapServices.size() + supports.size() ); // preallocate memory
+    allServices.insert( allServices.end(), barrelServices.begin(), barrelServices.end() );
+    allServices.insert( allServices.end(), endcapServices.begin(), endcapServices.end() );
+    allServices.insert( allServices.end(), supports.begin(), supports.end() );
+    
+    // Counting services with an ad-hoc index
+    int serviceId = 0;
+    double z1, z2, r1, r2, length, il, rl;
+    double mass;
+    std::stringstream myStringStream;
+    
+    
+    myStringStream << "serviceID/I,TypeOfService/C,Mother/C,elementID/I,z1/D,z2/D,r1/D,r2/D,Element/C,mass/D,mass_per_length/D,length/D,rl/D,il/D,local/I" << std::endl;
+    
+    for (auto& iter : allServices) {
+        z1 = iter.getZOffset();
+        z2 = iter.getZOffset()+iter.getZLength();
+        r1 = iter.getInnerRadius();
+        r2 = iter.getInnerRadius()+iter.getRWidth();
+        length = iter.getLength();
+        rl = iter.getRadiationLength();
+        il = iter.getInteractionLength();
+        
+        
+        bool isEmpty = true;
+        
+        const std::map<std::string, double>& localMasses = iter.getLocalMasses();
+        
+        
+        for (auto& massIt : localMasses) {
+            mass = massIt.second;
+            if (mass!=0) isEmpty=false;
+            elementname = massIt.first;
+            mothermodule= elementname.substr(elementname.length()-2);
+            
+            //	if (elementname.find("FPIX")!= std::string::npos)
+            //		simpleelementname = elementname.substr(5,2);
+            //         else
+            //		simpleelementname = elementname.substr(0,2);
+            
+            
+            if (elementname.find("TWP")!= std::string::npos)  {
+                
+                if (mothermodule.substr(0,1)=="L"){ massbarreltwp[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                
+                else {
+                    ringmodule = elementname.substr(elementname.length()-5,2);
+                    massringstwp[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]+=mass; }
+                
+                
+                typeofservice="TWP";
+                twptype = elementname.substr(7,6);
+                if (elementname.find("Cu") !=std::string::npos){
+                    if (mothermodule.substr(0,1)=="L"){
+                        barreltwp[std::stoi(mothermodule.substr(1,1))-1]+=length;
+                        barreltwptype[std::stoi(mothermodule.substr(1,1))-1]=twptype;
+                        if (twptype=="6+1_HS") barrelmodpergbt[std::stoi(mothermodule.substr(1,1))-1]=1.0;
+                        else if (twptype=="3+1_HS") barrelmodpergbt[std::stoi(mothermodule.substr(1,1))-1]=2.0;
+                        else if (twptype=="2+1_HS") barrelmodpergbt[std::stoi(mothermodule.substr(1,1))-1]=3.0;
+                        else if (twptype=="1+1_HS") barrelmodpergbt[std::stoi(mothermodule.substr(1,1))-1]=6.0;
+                        else if (twptype=="1+1_LS") barrelmodpergbt[std::stoi(mothermodule.substr(1,1))-1]=14.0;
+                        totalbarreltwp=totalbarreltwp+length;
+                    }
+                    else {
+                        ringmodule = elementname.substr(elementname.length()-5,2);
+                        ringstwp[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]+=length;
+                        ringstwptype[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=twptype;
+                        if (twptype=="6+1_HS") ringsmodpergbt[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=1.0;
+                        else if (twptype=="3+1_HS") ringsmodpergbt[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=2.0;
+                        else if (twptype=="2+1_HS") ringsmodpergbt[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=3.0;
+                        else if (twptype=="1+1_HS") ringsmodpergbt[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=6.0;
+                        else if (twptype=="1+1_LS") ringsmodpergbt[std::stoi(mothermodule.substr(1,1))-1][std::stoi(ringmodule.substr(1,1))-1]=14.0;
+                        totalringstwp=totalringstwp+length;
+                    }
+                }
+            }
+            else if (elementname.find("HV")!= std::string::npos) {
+                
+                
+                if (mothermodule.substr(0,1)=="L"){ massbarrelhv[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                else { massringshv[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                
+                typeofservice="HV";
+                if (elementname.find("Cu") !=std::string::npos){
+                    if (mothermodule.substr(0,1)=="L"){
+                        barrelhv[std::stoi(mothermodule.substr(1,1))-1]+=length;
+                        totalbarrelhv=totalbarrelhv+length;
+                    }
+                    else if (elementname.find("FPIX") ==std::string::npos){
+                        diskshv[std::stoi(mothermodule.substr(1,1))-1]+=length;
+                        totaldiskshv=totaldiskshv+length;
+                    }
+                }
+            }
+            else if (elementname.find("SP")!= std::string::npos) {
+                if (mothermodule.substr(0,1)=="L"){ massbarrelsp[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                else { massringssp[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                typeofservice="SP";
+                if (elementname.find("Cu") !=std::string::npos){
+                    if (mothermodule.substr(0,1)=="L"){
+                        barrelsp[std::stoi(mothermodule.substr(1,1))-1]+=length;
+                        totalbarrelsp=totalbarrelsp+length;
+                        
+                        //2.7g/cm3 for the Al density and 2.0 for the fact that every time we have two wires
+                    }
+                    else  { //i changed than tocheckfriday removed the fpix check, why only fpix could be also D1,D2 no?!
+                        diskssp[std::stoi(mothermodule.substr(1,1))-1]+=length;
+                        totaldiskssp=totaldiskssp+length;
+                    }
+                }
+                if (elementname.find("Al") !=std::string::npos){
+                    if (mothermodule.substr(0,1)=="L"){
+                        barrelsptotalX[std::stoi(mothermodule.substr(1,1))-1]=(mass/length)/2.7/2.0;
+                        //std:cout<<"layer" <<std::stoi(mothermodule.substr(1,1))-1<<"mass "<< mass<<"length"<< length<< "number"<<(mass/length)/2.7/2.0 <<std::endl;
+                    }
+                    else  { //i changed than tocheckfriday removed the fpix check, why only fpix could be also D1,D2 no?!
+                        fpixsptotalX[std::stoi(mothermodule.substr(1,1))-1]=(mass/length)/2.7/2.0;
+                    }
+                }
+            }
+            else if ((elementname.find("Ti")!= std::string::npos) || (elementname.find("CO")!= std::string::npos)){
+                typeofservice="Cooling";
+                
+                if (mothermodule.substr(0,1)=="L"){ massbarrelcooling[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+                else { massringscooling[std::stoi(mothermodule.substr(1,1))-1]+=mass; }
+            }
+            
+            
+            
+            
+            myStringStream
+            << serviceId << ","
+            << typeofservice << ","
+            << mothermodule << ","
+            << elementId++ << ","
+            << z1 << ","
+            << z2 << ","
+            << r1 << ","
+            << r2 << ","
+            << massIt.first << ","
+            << mass << ","
+            << mass/length << ","
+            << length << ","
+            << rl << ","
+            << il << std::endl;
+            
+            
+        }
+        
+        
+        
+        serviceId++;
+    }
+    for (int j=0;j<10;j++){
+        if ((barreltwp[j]< minbarreltwp) && (barreltwp[j]>0)) minbarreltwp=barreltwp[j];
+        if ((barreltwp[j]> maxbarreltwp) && (barreltwp[j]>0)) maxbarreltwp=barreltwp[j];
+        //	if ((ringstwp[j]< minringstwp) && (ringstwp[j]>0)) minringstwp=ringstwp[j];
+        //	if ((ringstwp[j]> maxringstwp) && (ringstwp[j]>0)) maxringstwp=ringstwp[j];
+        if ((barrelhv[j]< minbarrelhv) && (barrelhv[j]>0)) minbarrelhv=barrelhv[j];
+        if ((barrelhv[j]> maxbarrelhv) && (barrelhv[j]>0)) maxbarrelhv=barrelhv[j];
+        if ((barrelsp[j]< minbarrelsp) && (barrelsp[j]>0)) minbarrelsp=barrelsp[j];
+        if ((barrelsp[j]> maxbarrelsp) && (barrelsp[j]>0)) maxbarrelsp=barrelsp[j];
+    }
+    
+    
+    RootWTextFile* myTextFile = new RootWTextFile(Form("Services_inactiveSurfacesMaterials_%s.csv", myTrackerName.c_str()), "file containing all the materials");
+    myTextFile->addText(myStringStream.str());
+    // den to thelw to arxeio myContent->addItem(myTextFile);
+    
+    class LayerDiskSummaryVisitor : public ConstGeometryVisitor {
+    public:
+        RootWTable* layerTable = new RootWTable();
+        RootWTable* diskTable = new RootWTable();
+        std::vector<RootWTable*> diskNames;
+        std::vector<RootWTable*> ringTables;
+        std::map<std::string, std::set<std::string> > tagMapPositions;
+        std::map<std::string, int> tagMapCount;
+        std::map<std::string, long> tagMapCountChan;
+        std::map<std::string, const DetectorModule*> tagMap;
+        double sensorpowerbarrel[4],sensorpowerfpix1[4],sensorpowerfpix2[5];
+        double maxsensorpowerbarrel[4],maxsensorpowerfpix1[4],maxsensorpowerfpix2[5];
+
+
+
+        int nBarrelLayers=0;
+        int nEndcaps=0;
+        int nDisks=0;
+        int nRings=0;
+        int totalBarrelModules = 0;
+        int totalEndcapModules = 0;
+        int minBarrelModules = 100000;	//stella tobefixed random
+        int minEndcapModules = 100000;	//stella tobefixed random
+        int maxBarrelModules = 0;
+        int maxEndcapModules = 0;
+        double totArea = 0;
+        int totCountMod = 0;
+        int totCountSens = 0;
+        long totChannel = 0;
+        double totalSensorPower = 0;
+        double nMB;
+        int i;int nolayer,ringId_,diskId_;
+        
+        void preVisit() {
+            layerTable->setContent(0, 0, "Barrel :");
+            layerTable->setContent(1, 0, "Layer");
+            layerTable->setContent(2, 0, "# rods");
+            layerTable->setContent(3, 0, "# mods");
+            layerTable->setContent(4, 0, "# mods per rod");
+            layerTable->setContent(5,0,"pixel size (um*um)");
+            layerTable->setContent(6,0,"Module size x (ROCs)");
+            layerTable->setContent(7,0,"Module size y (ROCs)");
+            layerTable->setContent(8,0,"ROCs per module");
+            layerTable->setContent(9,0,"ROCs per rod");
+            layerTable->setContent(10,0,"ROCs total");
+            layerTable->setContent(11,0,"Power Info:");
+            layerTable->setContent(12,0,"Power per ROC [*]");
+            layerTable->setContent(13,0,"Power per module");	//powerperchip*rocxys*roczs
+            layerTable->setContent(14,0,"Power per layer");	//powerperchip*rocxys*roczs
+            layerTable->setContent(15,0,"Current per chain"); 	//powerpermodule/1.2
+            layerTable->setContent(16,0,"Targeted power/wire [0.1*TotalPowerChain]");//powerpwermodule*Nmodules*0.1
+            layerTable->setContent(17, 0, "Al_Xsection [mm2] SP cables");
+	    layerTable->setContent(18,0,"Succeeded R of SP cable");
+            layerTable->setContent(19,0,"Succeeded power/wire over 3m");
+	    layerTable->setContent(20,0,"Power on cables");	//powerperchip*rocxys*roczs
+            layerTable->setContent(21,0,"SP chains [*]");
+            layerTable->setContent(22, 0, "Min #Mods per SP chain (short) [*]");
+            layerTable->setContent(23,0,"Max #Mods per SP chain (long)[*]");
+            layerTable->setContent(24,0,"TWP info:");
+            layerTable->setContent(25,0,"length of TWP per Z end [mm]");
+            layerTable->setContent(26,0,"#readout links per module");
+            layerTable->setContent(27,0,"#control links per module");
+            layerTable->setContent(28,0,"speed of #readout links");
+            layerTable->setContent(29,0,"modules per GBT");
+            layerTable->setContent(30,0,"readout links per layer");
+            layerTable->setContent(31,0,"control links per layer");
+	    layerTable->setContent(32,0,"readout+control links per layer");
+            layerTable->setContent(33,0,"GBTs per layer (both ends) (tk)");
+	    layerTable->setContent(34,0,"GBTs per layer (both ends) (ideal)");
+            layerTable->setContent(35,0,"GBTs per layer (both ends) (realistic)");
+            layerTable->setContent(36,0,"Power for GBTs[*][1.05W/gbt+vtx]");
+	    layerTable->setContent(37,0,"Sensor info:");
+	    layerTable->setContent(38,0,"Max Power for sensors (tk)");
+	    layerTable->setContent(39,0,"Total Power(ROC, SPcable, sensor,GBT)");
+	    layerTable->setContent(40,0,"");
+
+            diskTable->setContent(0, 0, "Endcap :");
+            diskTable->setContent(1, 0, "Disk");
+            diskTable->setContent(2, 0, "z");
+            diskTable->setContent(3, 0, "# rings");
+            diskTable->setContent(4, 0, "# mods");
+
+
+            
+        }
+        void visit(const SimParms& s) override {
+            nMB = s.numMinBiasEvents();
+        }
+        void visit(const Barrel& b) override {
+            layerTable->setContent(0, 1 + nBarrelLayers, b.myid());
+        }
+        void visit(const Layer& l) override {
+            if (l.maxZ() < 0.) return;
+            ++nBarrelLayers;
+            totalBarrelModules += l.totalModules();
+            if (l.totalModules()>maxBarrelModules) maxBarrelModules = l.totalModules();
+            if (l.totalModules()<minBarrelModules) minBarrelModules = l.totalModules();
+            layerTable->setContent(1, nBarrelLayers, l.myid());
+            layerTable->setContent(2, nBarrelLayers, l.numRods());
+            layerTable->setContent(3, nBarrelLayers, l.totalModules());
+            layerTable->setContent(4, nBarrelLayers, (l.totalModules())/(l.numRods()));
+	    nolayer=l.myid();
+            
+            
+        }
+        void visit(const Endcap& e) override {
+            nEndcaps++;
+            diskTable->setContent(0, 1 + nDisks, e.myid());
+            //diskTable->setContent(0, 1 + nDisks, e.myid());
+            RootWTable* diskName = new RootWTable();
+            diskName->setContent(0, 0, e.myid() + ",  Disc 1 :");
+            diskNames.push_back(diskName);
+            
+            RootWTable* ringTable = new RootWTable();
+            ringTable->setContent(0, 0, "Ring :");
+            ringTable->setContent(1, 0, "");
+            ringTable->setContent(2, 0, "#disks per end");
+            ringTable->setContent(3, 0, "# mods");
+            ringTable->setContent(4, 0, "# mods per ring");
+            ringTable->setContent(5,0,"pixel size (um*um)");
+            ringTable->setContent(6,0,"Module size x (ROCs)");
+            ringTable->setContent(7,0,"Module size y (ROCs)");
+            ringTable->setContent(8,0,"ROCs per module");
+            ringTable->setContent(9,0,"ROCs per ring");
+            ringTable->setContent(10,0,"ROCs total");
+            ringTable->setContent(11,0,"Power Info");
+            ringTable->setContent(12,0,"Power per ROC [*]");
+            ringTable->setContent(13,0,"Power per module");
+	    ringTable->setContent(14,0,"Power per ring");
+            ringTable->setContent(15,0,"Current per chain");
+            ringTable->setContent(16,0,"Targeted power/wire [0.1*totalpowerchain]");
+	    ringTable->setContent(17,0,"Al_Xsection [mm2] SP cables [*]");
+            ringTable->setContent(18,0,"Succeeded R of SP cable over 3m");
+            ringTable->setContent(19,0,"Succeeded power/wire");
+            ringTable->setContent(20,0,"Power on SP cables");
+            ringTable->setContent(21,0,"SP chains [*]");
+            ringTable->setContent(22, 0, "Min Mods per SP chain (short) [*]");
+            ringTable->setContent(23,0,"Max Mods per SP chain (long) [*]");
+            ringTable->setContent(24,0,"TWP info:");
+            ringTable->setContent(25,0,"length of TWP per Z end [mm]");
+            ringTable->setContent(26,0,"#readout links per module");
+            ringTable->setContent(27,0,"#control links per module");
+            ringTable->setContent(28,0,"speed of #readout links");
+            ringTable->setContent(29,0,"modules per GBT");
+            ringTable->setContent(30,0,"readout links per ring");
+            ringTable->setContent(31,0,"control links per ring");
+            ringTable->setContent(32,0,"RO+ctrl links per ring");
+            ringTable->setContent(33,0,"GBTs per ring (one disk) (tkl)");
+            ringTable->setContent(34,0,"GBTs per ring (one disk) (opt)");
+            ringTable->setContent(35,0,"GBTs per ring (one disk) (pess)");
+            ringTable->setContent(36,0,"Power for GBTs[*]{1.05W/gbt+vtx]");
+            ringTable->setContent(37,0,"Sensor info:");
+            ringTable->setContent(38,0,"Max Sensor Power(avg over disks)");
+	    ringTable->setContent(39,0,"Total power (rocs,sp cables, gbts, sensor)");
+
+            ringTables.push_back(ringTable);
+        }
+        void visit(const Disk& d) override {
+            nRings = 0;
+            if (d.averageZ() < 0.) return;
+            ++nDisks;
+            diskId_=d.myid();
+            totalEndcapModules += d.totalModules();
+            if (d.totalModules()>maxEndcapModules) maxEndcapModules = d.totalModules();
+            if (d.totalModules()<minEndcapModules) minEndcapModules = d.totalModules();
+            diskTable->setContent(1, nDisks, d.myid());
+            diskTable->setContent(2, nDisks, d.averageZ(), coordPrecision);
+            diskTable->setContent(4, nDisks, d.totalModules());
+        }
+        void visit(const Ring& r) override {
+            if (r.averageZ() < 0. || r.numModules() == 0) return;
+            ++nRings;
+	    ringId_=r.myid();
+            diskTable->setContent(3, nDisks, nRings);
+            ringTables.at(nEndcaps-1)->setContent(2,nRings,nDisks);
+            ringTables.at(nEndcaps-1)->setContent(0,r.myid(), r.myid());//itan to mesaio nRings
+            //std::cout << "nrings"<< nRings<<"ringid"<<r.myid()<<std::endl;
+            ringTables.at(nEndcaps-1)->setContent(4, nRings, r.numModules());
+            //ringTables.at(nEndcaps-1)->setContent(9, nRings, d.totalModules());
+        }
+        
+        void visit(const Module& m) override { //this is the most important one
+            TagMaker tmak(m);
+	    
+	    int posi;
+            std::string aSensorTag = tmak.sensorGeoTag;
+            tagMapPositions[aSensorTag].insert(tmak.posTag);
+            tagMapCount[aSensorTag]++;
+            tagMapCountChan[aSensorTag] += m.totalChannels();
+            totCountMod++;
+            totCountSens += m.numSensors();
+            totChannel += m.totalChannels();
+            totArea += m.area()*m.numSensors();
+
+            if (tagMap.find(aSensorTag)==tagMap.end()){
+                // We have a new sensor geometry
+                tagMap[aSensorTag] = &m;
+            }
+            //tagMapPositions[aSensorTag]
+            std::string tagname= tmak.posTag;
+            std::string pixeltype= m.moduleType();
+            std::string pixelsize;
+            if (pixeltype.find("_2_") !=std::string::npos){
+                pixelsize = pixeltype.substr(8,3);
+                pixeltype = pixeltype.substr(12,pixeltype.length()-12);
+            }
+            else{
+                pixelsize = pixeltype.substr(6,3);
+                pixeltype = pixeltype.substr(10,pixeltype.length()-10);
+            }
+            if (tagname.find("PXBL") != std::string::npos){
+                posi = std::stoi(tagname.substr(tagname.length()-1,1));
+                layerTable->setContent(5, posi,pixeltype);
+                layerTable->setContent(6, posi,std::stoi(pixelsize.substr(0,1)));
+                layerTable->setContent(7, posi,std::stoi(pixelsize.substr(2,1)));
+                layerTable->setContent(8, posi,std::stoi(pixelsize.substr(0,1))*std::stoi(pixelsize.substr(2,1)));
+		if (m.moduleRing() ==1){
+			sensorpowerbarrel[nolayer-1] +=m.sensorsIrradiationPowerMean();//isthiscorrect?
+			maxsensorpowerbarrel[nolayer-1] +=m.sensorsIrradiationPowerMax();//isthiscorrect?
+		} else {
+			sensorpowerbarrel[nolayer-1] +=2*(m.sensorsIrradiationPowerMean());//isthiscorrect?
+			maxsensorpowerbarrel[nolayer-1] +=2*(m.sensorsIrradiationPowerMax());//isthiscorrect?
+		}
+            }
+            for (int k=0;k<nBarrelLayers;k++){
+                int tempmodperod =std::stoi(layerTable->getContent(4,k+1));
+                int temprocx =std::stoi(layerTable->getContent(6,k+1));
+                int temprocy =std::stoi(layerTable->getContent(7,k+1));
+                int temprod =std::stoi(layerTable->getContent(2,k+1));
+                layerTable->setContent(9,k+1, tempmodperod*temprocx*temprocy);
+                layerTable->setContent(10,k+1, tempmodperod*temprocx*temprocy*temprod);
+		layerTable->setContent(37,k+1, 0,1);
+		layerTable->setContent(38,k+1, maxsensorpowerbarrel[k],1);
+
+
+            }
+        }
+        void visit(const EndcapModule& m) override {
+              TagMaker tmak(m);
+	      if (nEndcaps==1){
+	      sensorpowerfpix1[m.ring()-1] +=m.sensorsIrradiationPowerMean();//isthiscorrect?
+	      maxsensorpowerfpix1[m.ring()-1] +=m.sensorsIrradiationPowerMax();//isthiscorrect?
+		}else if (nEndcaps==2){
+	      sensorpowerfpix2[m.ring()-1] +=m.sensorsIrradiationPowerMean();//isthiscorrect?
+	      maxsensorpowerfpix2[m.ring()-1] +=m.sensorsIrradiationPowerMax();//isthiscorrect?
+		}
+			
+    	if (m.side() == 1 && m.disk() == 1) {
+            std::string aSensorTag = tmak.sensorGeoTag;
+            tagMapPositions[aSensorTag].insert(tmak.posTag);
+            tagMapCount[aSensorTag]++;
+            tagMapCountChan[aSensorTag] += m.totalChannels();
+            totCountMod++;
+            totCountSens += m.numSensors();
+            totChannel += m.totalChannels();
+            totArea += m.area()*m.numSensors();
+            if (tagMap.find(aSensorTag)==tagMap.end()){
+                // We have a new sensor geometry
+                tagMap[aSensorTag] = &m;
+            }
+            std::string tagname= tmak.posTag;
+            std::string pixeltype= m.moduleType();
+            std::string pixelsize;
+            if (pixeltype.find("_2_") !=std::string::npos){
+                pixelsize = pixeltype.substr(8,3);
+                pixeltype = pixeltype.substr(12,pixeltype.length()-12);
+            }
+            else{
+                pixelsize = pixeltype.substr(6,3);
+                pixeltype = pixeltype.substr(10,pixeltype.length()-10);
+            }
+	    
+            
+            ringTables.at(nEndcaps-1)->setContent(5, nRings,pixeltype);
+            ringTables.at(nEndcaps-1)->setContent(6, nRings,std::stoi(pixelsize.substr(0,1)));
+            ringTables.at(nEndcaps-1)->setContent(7, nRings,std::stoi(pixelsize.substr(2,1)));
+            int tempo= std::stoi(pixelsize.substr(0,1))*std::stoi(pixelsize.substr(2,1));
+            ringTables.at(nEndcaps-1)->setContent(8,nRings, tempo);
+           
+           
+            for (int nr=0;nr<nRings;nr++){
+                
+                int tempmodperod =std::stoi(ringTables.at(nEndcaps-1)->getContent(4,nr+1));
+                int temprocx =std::stoi(ringTables.at(nEndcaps-1)->getContent(6,nr+1));
+                int temprocy =std::stoi(ringTables.at(nEndcaps-1)->getContent(7,nr+1));
+                int temprod =std::stoi(ringTables.at(nEndcaps-1)->getContent(2,nr+1));
+                ringTables.at(nEndcaps-1)->setContent(9,nr+1, tempmodperod*temprocx*temprocy);
+                ringTables.at(nEndcaps-1)->setContent(10,nr+1, tempmodperod*temprocx*temprocy*temprod);  
+            }
+            ringTables.at(nEndcaps-1)->setContent(0, nRings+1,"Two Odd Dees");
+            ringTables.at(nEndcaps-1)->setContent(0, nRings+2,"Two Even Dees");
+            ringTables.at(nEndcaps-1)->setContent(0, nRings+3,"One Disk");
+            ringTables.at(nEndcaps-1)->setContent(0, nRings+4,"All disks (one end)");
+            ringTables.at(nEndcaps-1)->setContent(0, nRings+5,"Both ends");
+	    
+	    
+	  }//if side=1 & disk=1
+      
+if (nEndcaps==1){
+	  ringTables.at(nEndcaps-1)->setContent(37,m.ring(),0);  
+  	  ringTables.at(nEndcaps-1)->setContent(38,m.ring(),(maxsensorpowerfpix1[m.ring()-1]));  
+}
+else if (nEndcaps==2){
+	  ringTables.at(nEndcaps-1)->setContent(37,m.ring(),0);  
+  	  ringTables.at(nEndcaps-1)->setContent(38,m.ring(),(maxsensorpowerfpix2[m.ring()-1]));  
+}
+          
+        }
+        
+        void postVisit(double mintwp,double maxtwp,double totaltwp){
+            
+            diskTable->setContent(0, nDisks+1, "Total");
+            diskTable->setContent(4, nDisks+1, totalEndcapModules*2);
+            layerTable->setContent(0, nBarrelLayers+1, "Total\t");
+        }
+        
+        
+        int numberoflayers()  {
+            return nBarrelLayers;
+        }
+        int numberofdisks()  {
+            return nDisks;
+        }
+        int numberofrings()  {
+            return nRings;
+        }
+        
+    };//end of layerdisksummaryvisitor class
+    
+    
+    LayerDiskSummaryVisitor v;
+    v.preVisit();
+    simparms.accept(v);
+    tracker.accept(v);
+    v.postVisit(minbarreltwp/2.0, maxbarreltwp/2.0, totalbarreltwp/2.0);
+    
+    for (int nl=0;nl<v.numberoflayers();nl++) {
+       
+       
+     
+       
+       
+       
+        v.layerTable->setContent(25, nl+1,barreltwp[nl]/2.0);
+        v.layerTable->setContent(26, nl+1,barreltwptype[nl].substr(0,1));
+        v.layerTable->setContent(27, nl+1,barreltwptype[nl].substr(2,1));
+        v.layerTable->setContent(28, nl+1,barreltwptype[nl].substr(4,2));
+        v.layerTable->setContent(29, nl+1,barrelmodpergbt[nl],2);
+        
+        int rocxs= std::stoi(v.layerTable->getContent(6,nl+1));
+        int rocys= std::stoi(v.layerTable->getContent(7,nl+1));
+        int modsperod= std::stoi(v.layerTable->getContent(4,nl+1));
+        int rods= std::stoi(v.layerTable->getContent(2,nl+1));
+        
+        double temp = (std::stoi(v.layerTable->getContent(26,nl+1)))*modsperod*rods;
+        v.layerTable->setContent(30,nl+1,temp);
+        temp = (std::stoi(v.layerTable->getContent(27,nl+1)))*modsperod*rods;
+        v.layerTable->setContent(31,nl+1,temp);
+	temp = ((std::stoi(v.layerTable->getContent(27,nl+1)))+(std::stoi(v.layerTable->getContent(26,nl+1))))*modsperod*rods;
+        v.layerTable->setContent(32,nl+1,temp);
+
+        //this gives the min 
+        //to get what is created in tklayout you take ceil(modsperrod/2.0)=5.0 then muliple with R0links per mod then divide with modpergbt then double it.
+        temp = 2*(ceil(std::stod(v.layerTable->getContent(4,nl+1))/2.0)*rods/(std::stod(v.layerTable->getContent(29,nl+1))));
+        
+        v.layerTable->setContent(33,nl+1,temp);
+        v.layerTable->setContent(36,nl+1,1.05*temp);
+        temp = (std::stod(v.layerTable->getContent(3,nl+1)))/(std::stod(v.layerTable->getContent(29,nl+1)));
+        
+	v.layerTable->setContent(34,nl+1,temp,2);
+        int realtotalgbt[4]={108,88,36,52};
+	v.layerTable->setContent(35,nl+1,realtotalgbt[nl]);
+	  
+       
+       
+        double chippower=2.8;
+        int modsperchain[4]={8,8,8,8};
+        int maxmodsperchain[4]={10,10,10,10};
+        int spchains[4]={12,28,24,32};
+        v.layerTable->setContent(12,nl+1,chippower,2);
+        v.layerTable->setContent(13,nl+1,chippower*rocxs*rocys,2);//powerperchip*rocxys*roczs , assumed 3W/chip
+         v.layerTable->setContent(14,nl+1,chippower*rocxs*rocys*modsperod*rods,2);//powerperchip*rocxys*roczs , assumed 3W/chip
+
+        v.layerTable->setContent(15,nl+1,chippower*rocxs*rocys/1.4,2); 	//powerpermodule/1.4, current per chain
+        v.layerTable->setContent(16,nl+1,chippower*rocxs*rocys*modsperchain[nl]*0.05*1.1,2);//powerpwermodule*Nmodules*0.1 //targeted power/wire
+        
+        
+        v.layerTable->setContent(17, nl+1,(barrelsptotalX[nl]/std::stod(v.layerTable->getContent(2, nl+1)))*1000,2);
+        
+        //2.65e-5 ohm per mm is the resistivity of Al R=p*l/A but 3.68 the on eof the Habia cable
+        double rsuc= 3.68e-8*3/(std::stod(v.layerTable->getContent(17, nl+1))*1e-6);
+        //v.layerTable->setContent(22, nl+1,2.65*0.00000001*2.5/std::stod(v.layerTable->getContent(23, nl+1)),5);
+        v.layerTable->setContent(18, nl+1,rsuc,2);
+        double currentperchain=std::stod(v.layerTable->getContent(15,nl+1));
+        v.layerTable->setContent(19, nl+1, rsuc*currentperchain*currentperchain,2); 
+	v.layerTable->setContent(20, nl+1, rsuc*currentperchain*currentperchain*2*spchains[nl],2);     
+    
+        v.layerTable->setContent(21, nl+1, spchains[nl]);
+        v.layerTable->setContent(22, nl+1, modsperchain[nl]);
+        v.layerTable->setContent(23, nl+1, maxmodsperchain[nl]);
+	
+	
+	
+	temp=0;
+	temp=std::stod(v.layerTable->getContent(14,nl+1));
+	temp+=std::stod(v.layerTable->getContent(20,nl+1));
+	temp+=std::stod(v.layerTable->getContent(36,nl+1));
+	temp+=std::stod(v.layerTable->getContent(38,nl+1));
+	v.layerTable->setContent(39,nl+1,temp);
+	v.layerTable->setContent(40,nl+1,"");
+    }
+
+    
+    
+    
+    double temp;
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(3, i+1));
+    }
+    v.layerTable->setContent(3, v.numberoflayers()+1, temp);temp=0.0;
+
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(10, i+1));
+    }
+    v.layerTable->setContent(10, v.numberoflayers()+1, temp);temp=0.0;
+    
+
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(14, i+1));
+    }
+    v.layerTable->setContent(14, v.numberoflayers()+1, temp);temp=0.0;
+    
+
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(20, i+1));
+    }
+    v.layerTable->setContent(20, v.numberoflayers()+1, temp);temp=0.0;
+    
+
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(21, i+1));
+    }
+    v.layerTable->setContent(21, v.numberoflayers()+1, temp);temp=0.0;
+    
+
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(25, i+1));
+    }
+    v.layerTable->setContent(25, v.numberoflayers()+1, temp);temp=0.0;
+    
+
+
+
+for (int ll=30;ll<40;ll++){
+    for (int i=0;i<v.numberoflayers();i++) {
+        temp+=std::stod(v.layerTable->getContent(ll, i+1));
+    }
+    v.layerTable->setContent(ll, v.numberoflayers()+1, temp);temp=0.0;
+}
+
+
+    int noflastdisk[v.nEndcaps];
+    int nofring[v.nEndcaps];
+    int nofdisks[v.nEndcaps];
+    
+    //#stella finding out how many rings and how many disks for each type of endcap
+    for (int i = 0; i < v.nEndcaps; i++) {
+        noflastdisk[i]=std::stoi(v.ringTables.at(i)->getContent(2,1));
+        nofring[i]=std::stoi(v.diskTable->getContent(3,noflastdisk[i]));
+        if (i==0) nofdisks[i]= noflastdisk[i];else nofdisks[i]=noflastdisk[i]-noflastdisk[i-1];
+    }
+    double totaltwpmassfpix[2];
+    totaltwpmassfpix[0]=0.0; totaltwpmassfpix[1]=0.0;
+    
+    //#stella filling info for fpix services
+    for (int ii=0; ii<v.nEndcaps;ii++){
+        for (int jj=0; jj<nofring[ii];jj++){
+            //revisitthemodulesnadtherings
+            v.ringTables.at(ii)->setContent(2,jj+1,nofdisks[ii]);
+            v.ringTables.at(ii)->setContent(3,jj+1,nofdisks[ii]*std::stoi(v.ringTables.at(ii)->getContent(4,jj+1)));
+            
+            totaltwpmassfpix[ii] =  totaltwpmassfpix[ii]+ ((massringstwp[ii][jj])/(nofdisks[ii]*2.0));
+            
+            v.ringTables.at(ii)->setContent(25, jj+1,(ringstwp[ii][jj])/(nofdisks[ii]*2));			
+            v.ringTables.at(ii)->setContent(26, jj+1,ringstwptype[ii][jj].substr(0,1));
+            v.ringTables.at(ii)->setContent(27, jj+1,ringstwptype[ii][jj].substr(2,1));
+            v.ringTables.at(ii)->setContent(28, jj+1,ringstwptype[ii][jj].substr(4,2));
+            v.ringTables.at(ii)->setContent(29, jj+1,ringsmodpergbt[ii][jj],2);
+            
+            int rocxs= std::stoi(v.ringTables.at(ii)->getContent(6,jj+1));
+            int rocys= std::stoi(v.ringTables.at(ii)->getContent(7,jj+1));
+            int modsperring= std::stoi(v.ringTables.at(ii)->getContent(4,jj+1));
+            
+            double disks= std::stod(v.ringTables.at(ii)->getContent(2,jj+1));
+            double temp = (std::stoi(v.ringTables.at(ii)->getContent(26,jj+1)))*modsperring;
+            v.ringTables.at(ii)->setContent(30,jj+1,temp);	
+            temp = (std::stoi(v.ringTables.at(ii)->getContent(27,jj+1)))*modsperring;
+            v.ringTables.at(ii)->setContent(31,jj+1,temp);	
+	   temp+=(std::stoi(v.ringTables.at(ii)->getContent(26,jj+1)))*modsperring;
+            v.ringTables.at(ii)->setContent(32,jj+1,temp);	
+            double modsperdee = (std::stod(v.ringTables.at(ii)->getContent(4,jj+1)))/2.0;
+            //temp = double (modsperdee/(std::stod(v.ringTables.at(ii)->getContent(32,jj+1))));//fridaysanitycheck
+            //temp=2*temp;
+            temp = 2*(ceil(std::stod(v.ringTables.at(ii)->getContent(4,jj+1))/2.0)/(std::stod(v.ringTables.at(ii)->getContent(29,jj+1))));
+            
+            v.ringTables.at(ii)->setContent(33,jj+1,temp,1);
+            v.ringTables.at(ii)->setContent(36,jj+1,1.05*temp,2);	
+	    temp=std::stod(v.ringTables.at(ii)->getContent(37,jj+1))/disks;
+            v.ringTables.at(ii)->setContent(37,jj+1,temp);
+	    temp=std::stod(v.ringTables.at(ii)->getContent(38,jj+1))/disks;
+            v.ringTables.at(ii)->setContent(38,jj+1,temp);
+
+	    
+            double chippower=2.8;
+            int modsperchain[2][5]={{10,8,6,8,0},{10,8,9,10,8}};
+            int maxmodsperchain[2][5]={{10,8,6,8,0},{10,10,9,10,8}};
+            int spchains[2][5]={{2,4,4,4,0},{4,6,4,4,6}};
+            v.ringTables.at(ii)->setContent(12,jj+1,chippower,2);
+            v.ringTables.at(ii)->setContent(13,jj+1,chippower*rocxs*rocys,2);//powerperchip*rocxys*roczs , assumed 3W/chip
+            v.ringTables.at(ii)->setContent(14,jj+1,chippower*rocxs*rocys*modsperring,2);//powerperchip*rocxys*roczs , assumed 3W/chip
+
+            v.ringTables.at(ii)->setContent(15,jj+1,chippower*rocxs*rocys/1.4,2); 	//powerpermodule/1.2, current per chain
+            v.ringTables.at(ii)->setContent(16,jj+1,chippower*rocxs*rocys*modsperchain[ii][jj]*0.05*1.1,2);//powerpwermodule*Nmodules*0.1 //targeted power/wire
+	    
+ 
+	    double viasou[2][5]={{0.6,0.8,2.0,1.6},{0.2,0.4,0.6,0.4,0.6}};
+	    v.ringTables.at(ii)->setContent(17,jj+1,viasou[ii][jj],2);//powerpwermodule*Nmodules*0.1 //targeted power/wire
+
+	double rsuc;    
+	if (ii==0)
+			 rsuc= 3.68e-8*3/(std::stod(v.ringTables.at(ii)->getContent(17, jj+1))*1e-6);
+	else 
+			 rsuc= 3.68e-8*1/(std::stod(v.ringTables.at(ii)->getContent(17, jj+1))*1e-6);
+		
+        v.ringTables.at(ii)->setContent(18, jj+1,rsuc,2);
+        double currentperchain=std::stod(v.ringTables.at(ii)->getContent(15,jj+1));
+        v.ringTables.at(ii)->setContent(19, jj+1, rsuc*currentperchain*currentperchain,2); 
+        v.ringTables.at(ii)->setContent(20, jj+1, rsuc*currentperchain*currentperchain*2*spchains[ii][jj],2);    
+	
+	
+	
+            v.ringTables.at(ii)->setContent(21,jj+1,spchains[ii][jj]);
+            v.ringTables.at(ii)->setContent(22,jj+1,modsperchain[ii][jj]);
+            v.ringTables.at(ii)->setContent(23,jj+1,maxmodsperchain[ii][jj]);
+	
+double totalpower = std::stod(v.ringTables.at(ii)->getContent(14,jj+1));
+totalpower += std::stod(v.ringTables.at(ii)->getContent(20,jj+1));
+totalpower += std::stod(v.ringTables.at(ii)->getContent(38,jj+1));
+totalpower += std::stod(v.ringTables.at(ii)->getContent(36,jj+1));
+ 	               v.ringTables.at(ii)->setContent(39,jj+1,totalpower);
+
+
+
+
+        }
+
+        
+        double odd,even;
+        if (ii==0){
+            odd=std::stod(v.ringTables.at(ii)->getContent(4, 1))+std::stod(v.ringTables.at(ii)->getContent(4, 3));	
+        }else odd=std::stod(v.ringTables.at(ii)->getContent(4, 1))+std::stod(v.ringTables.at(ii)->getContent(4, 3))+std::stod(v.ringTables.at(ii)->getContent(4, 5));	
+        even=std::stod(v.ringTables.at(ii)->getContent(4, 2))+std::stod(v.ringTables.at(ii)->getContent(4, 4));	
+        v.ringTables.at(ii)->setContent(4,nofring[ii]+1,odd,2);
+        v.ringTables.at(ii)->setContent(4,nofring[ii]+2,even,2);
+        v.ringTables.at(ii)->setContent(4,nofring[ii]+3,(odd+even),2);
+        v.ringTables.at(ii)->setContent(4,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        v.ringTables.at(ii)->setContent(4,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+
+ if (ii==0){
+            odd=std::stod(v.ringTables.at(ii)->getContent(9, 1))+std::stod(v.ringTables.at(ii)->getContent(9, 3));	
+        }else odd=std::stod(v.ringTables.at(ii)->getContent(9, 1))+std::stod(v.ringTables.at(ii)->getContent(9, 3))+std::stod(v.ringTables.at(ii)->getContent(9, 5));	
+        even=std::stod(v.ringTables.at(ii)->getContent(9, 2))+std::stod(v.ringTables.at(ii)->getContent(9, 4));	
+        v.ringTables.at(ii)->setContent(9,nofring[ii]+1,odd,2);
+        v.ringTables.at(ii)->setContent(9,nofring[ii]+2,even,2);
+        v.ringTables.at(ii)->setContent(9,nofring[ii]+3,(odd+even),2);
+        v.ringTables.at(ii)->setContent(9,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        v.ringTables.at(ii)->setContent(9,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+ if (ii==0){
+            odd=std::stod(v.ringTables.at(ii)->getContent(14, 1))+std::stod(v.ringTables.at(ii)->getContent(14, 3));	
+        }else odd=std::stod(v.ringTables.at(ii)->getContent(14, 1))+std::stod(v.ringTables.at(ii)->getContent(14, 3))+std::stod(v.ringTables.at(ii)->getContent(14, 5));	
+        even=std::stod(v.ringTables.at(ii)->getContent(14, 2))+std::stod(v.ringTables.at(ii)->getContent(14, 4));	
+        v.ringTables.at(ii)->setContent(14,nofring[ii]+1,odd,2);
+        v.ringTables.at(ii)->setContent(14,nofring[ii]+2,even,2);
+        v.ringTables.at(ii)->setContent(14,nofring[ii]+3,(odd+even),2);
+        v.ringTables.at(ii)->setContent(14,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        v.ringTables.at(ii)->setContent(14,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+ if (ii==0){
+            odd=std::stod(v.ringTables.at(ii)->getContent(20, 1))+std::stod(v.ringTables.at(ii)->getContent(20, 3));	
+        }else odd=std::stod(v.ringTables.at(ii)->getContent(20, 1))+std::stod(v.ringTables.at(ii)->getContent(20, 3))+std::stod(v.ringTables.at(ii)->getContent(20, 5));	
+        even=std::stod(v.ringTables.at(ii)->getContent(20, 2))+std::stod(v.ringTables.at(ii)->getContent(20, 4));	
+        v.ringTables.at(ii)->setContent(20,nofring[ii]+1,odd,2);
+        v.ringTables.at(ii)->setContent(20,nofring[ii]+2,even,2);
+        v.ringTables.at(ii)->setContent(20,nofring[ii]+3,(odd+even),2);
+        v.ringTables.at(ii)->setContent(20,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        v.ringTables.at(ii)->setContent(20,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+ 
+ if (ii==0){
+            odd=std::stod(v.ringTables.at(ii)->getContent(21, 1))+std::stod(v.ringTables.at(ii)->getContent(21, 3));	
+        }else odd=std::stod(v.ringTables.at(ii)->getContent(21, 1))+std::stod(v.ringTables.at(ii)->getContent(21, 3))+std::stod(v.ringTables.at(ii)->getContent(21, 5));	
+        even=std::stod(v.ringTables.at(ii)->getContent(21, 2))+std::stod(v.ringTables.at(ii)->getContent(21, 4));	
+        v.ringTables.at(ii)->setContent(21,nofring[ii]+1,odd,2);
+        v.ringTables.at(ii)->setContent(21,nofring[ii]+2,even,2);
+        v.ringTables.at(ii)->setContent(21,nofring[ii]+3,(odd+even),2);
+        v.ringTables.at(ii)->setContent(21,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        v.ringTables.at(ii)->setContent(21,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+
+
+        int gbtbest[2][2]={{18,14},{18,14}};
+	int gbtpess[2][2]={{20,16},{20,16}};
+	v.ringTables.at(ii)->setContent(34,nofring[ii]+1,gbtbest[ii][0],2);
+        v.ringTables.at(ii)->setContent(34,nofring[ii]+2,gbtbest[ii][1],2);
+        v.ringTables.at(ii)->setContent(34,nofring[ii]+3,(gbtbest[ii][0]+gbtbest[ii][1]),2);
+        v.ringTables.at(ii)->setContent(34,nofring[ii]+4,nofdisks[ii]*(gbtbest[ii][0]+gbtbest[ii][1]),2);
+        v.ringTables.at(ii)->setContent(34,nofring[ii]+5,2*nofdisks[ii]*(gbtbest[ii][0]+gbtbest[ii][1]),2);
+	v.ringTables.at(ii)->setContent(35,nofring[ii]+1,gbtpess[ii][0],2);
+        v.ringTables.at(ii)->setContent(35,nofring[ii]+2,gbtpess[ii][1],2);
+        v.ringTables.at(ii)->setContent(35,nofring[ii]+3,(gbtpess[ii][0]+gbtpess[ii][1]),2);
+        v.ringTables.at(ii)->setContent(35,nofring[ii]+4,nofdisks[ii]*(gbtpess[ii][0]+gbtpess[ii][1]),2);
+        v.ringTables.at(ii)->setContent(35,nofring[ii]+5,2*nofdisks[ii]*(gbtpess[ii][0]+gbtpess[ii][1]),2);
+
+
+
+
+
+for (int kk=29;kk<34;kk++){
+		if (ii==0){
+       		    odd=std::stod(v.ringTables.at(ii)->getContent(kk, 1))+std::stod(v.ringTables.at(ii)->getContent(kk, 3));	
+      	 	}else odd=std::stod(v.ringTables.at(ii)->getContent(kk, 1))+std::stod(v.ringTables.at(ii)->getContent(kk, 3))+std::stod(v.ringTables.at(ii)->getContent(kk, 5));	
+       		even=std::stod(v.ringTables.at(ii)->getContent(kk, 2))+std::stod(v.ringTables.at(ii)->getContent(kk, 4));	
+       		v.ringTables.at(ii)->setContent(kk,nofring[ii]+1,odd,2);
+       		v.ringTables.at(ii)->setContent(kk,nofring[ii]+2,even,2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+3,(odd+even),2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+	}
+for (int kk=36;kk<40;kk++){
+		if (ii==0){
+       		    odd=std::stod(v.ringTables.at(ii)->getContent(kk, 1))+std::stod(v.ringTables.at(ii)->getContent(kk, 3));	
+      	 	}else odd=std::stod(v.ringTables.at(ii)->getContent(kk, 1))+std::stod(v.ringTables.at(ii)->getContent(kk, 3))+std::stod(v.ringTables.at(ii)->getContent(kk, 5));	
+       		even=std::stod(v.ringTables.at(ii)->getContent(kk, 2))+std::stod(v.ringTables.at(ii)->getContent(kk, 4));	
+       		v.ringTables.at(ii)->setContent(kk,nofring[ii]+1,odd,2);
+       		v.ringTables.at(ii)->setContent(kk,nofring[ii]+2,even,2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+3,(odd+even),2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+4,nofdisks[ii]*(odd+even),2);
+        	v.ringTables.at(ii)->setContent(kk,nofring[ii]+5,2*nofdisks[ii]*(odd+even),2);
+	}
+
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    RootWTable* spacer = new RootWTable();
+    spacer->setContent(0, 0, " ");
+    spacer->setContent(1, 0, " ");
+    spacer->setContent(2, 0, " ");
+    spacer->setContent(3, 0, " ");
+    
+    myContent->addItem(v.layerTable);
+    //myContent->addItem(spacer);
+    // myContent->addItem(v.diskTable);
+    
+    for (int i = 0; i < v.nEndcaps; i++) {
+        if (i > 0) myContent->addItem(spacer);
+        myContent->addItem(v.diskNames.at(i));
+        myContent->addItem(v.ringTables.at(i));	
+    }
+    
+    
+}
   void Vizard::drawInactiveSurfacesSummary(MaterialBudget& materialBudget, RootWPage& myPage) {
     Tracker& myTracker = materialBudget.getTracker();
     std::string myTrackerName = myTracker.myid();

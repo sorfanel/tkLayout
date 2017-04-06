@@ -1,14 +1,69 @@
 Conversion {
   Input {
     Element {
-      elementName FPIX_Cu
+      elementName FPIX_Cu_HV_D1
       quantity 1
       unit g/m
     }
   }
   Output {
     Element {
-      elementName Cu
+    
+      elementName Cu_HV_D1
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_Cu_SP_D1
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_D1
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_Cu_HV_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_HV_D2
+      quantity 1000
+      unit g/m
+      service true
+    }
+  }
+}
+Conversion {
+  Input {
+    Element {
+      elementName FPIX_Cu_SP_D2
+      quantity 1
+      unit g/m
+    }
+  }
+  Output {
+    Element {
+    
+      elementName Cu_SP_D2
       quantity 1000
       unit g/m
       service true
