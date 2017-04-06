@@ -1,0 +1,26 @@
+// 0.4 mm^2 power wires
+// Serial power: the power lines do not accumulate
+Component {
+  componentName "Power wires L4 [0.4mm2]"
+  service true
+  scaleOnSensor 0 
+ 
+  // Two wires
+  Element {
+    elementName Cu_SP_L4
+    quantity 0.56
+    unit g/m
+  }
+  // Two wires
+  Element {
+    elementName PE_SP_L4
+    quantity 0.44
+    unit g/m
+  }
+  // Two wires 0.4 mm^2
+  Element {
+    elementName Al_SP_L4
+    quantity 2.16
+    unit g/m
+  }
+}
