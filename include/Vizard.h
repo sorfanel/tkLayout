@@ -193,7 +193,7 @@ namespace insur {
     bool triggerSummary(Analyzer& a, Tracker& tracker, RootWSite& site, bool extended);
     bool neighbourGraphSummary(InactiveSurfaces& is, RootWSite& site);
     void drawInactiveSurfacesSummary(MaterialBudget& mb, RootWPage& page);
- void StellaSummary(Analyzer& a, Tracker& tracker,MaterialBudget& materialBudget, InactiveSurfaces* inactive,SimParms& simparms, bool& debugServices, RootWSite& site, std::string name);   
+ void StellaSummary(Analyzer& a, Tracker& tracker,MaterialBudget& materialBudget, InactiveSurfaces* inactive, bool& debugServices, RootWSite& site, std::string name);   
   bool additionalInfoSite(const std::string& settingsfile,
                             Analyzer& analyzer, Analyzer& pixelAnalyzer, Tracker& tracker, SimParms& simparms, RootWSite& site);
     bool makeLogPage(RootWSite& site);

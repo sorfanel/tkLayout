@@ -6412,8 +6412,7 @@ namespace insur {
 
 
 
-void Vizard::StellaSummary(Analyzer& a, Tracker& tracker, MaterialBudget& materialBudget, InactiveSurfaces* inactive, SimParms& simparms,  bool&
-                           debugServices, RootWSite& site, std::string name) {
+void Vizard::StellaSummary(Analyzer& a, Tracker& tracker, MaterialBudget& materialBudget, InactiveSurfaces* inactive,  bool& debugServices, RootWSite& site, std::string name) {
     
     Tracker& myTracker = materialBudget.getTracker();
     std::string myTrackerName = myTracker.myid();
@@ -6743,9 +6742,7 @@ void Vizard::StellaSummary(Analyzer& a, Tracker& tracker, MaterialBudget& materi
 
             
         }
-        void visit(const SimParms& s) override {
-            nMB = s.numMinBiasEvents();
-        }
+  
         void visit(const Barrel& b) override {
             layerTable->setContent(0, 1 + nBarrelLayers, b.myid());
         }
@@ -6990,7 +6987,7 @@ else if (nEndcaps==2){
     
     LayerDiskSummaryVisitor v;
     v.preVisit();
-    simparms.accept(v);
+
     tracker.accept(v);
     v.postVisit(minbarreltwp/2.0, maxbarreltwp/2.0, totalbarreltwp/2.0);
     
